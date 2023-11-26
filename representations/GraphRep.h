@@ -7,7 +7,8 @@
 
 
 class GraphRep {
-
+public:
+    static void printAdjacencyMatrix(double **table, int verticesNum);
 };
 
 

@@ -6,8 +6,16 @@
 #define PEA_PROJEKT2_DATAREADER_H
 
 
-class DataReader {
+#include <string>
+#include "../graph/TSPGraph.h"
 
+class DataReader {
+private:
+    static int extractNumber(const char* input);
+
+public:
+    static TSPGraph* createGraphFromTheData(const char* filePath);
+    static TSPGraph* createRandomGraph(int verticesNumber);
 };
 
 

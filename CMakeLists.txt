@@ -6,9 +6,12 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(PEA_Projekt2 main.cpp
         data/DataReader.cpp
         data/DataReader.h
-        graphs/Graph.cpp
-        graphs/Graph.h
-        graphs/DirectedGraph.cpp
-        graphs/DirectedGraph.h
         representations/GraphRep.cpp
-        representations/GraphRep.h)
+        representations/GraphRep.h
+        xmlParser/tinyxml2.cpp
+        xmlParser/tinyxml2.h
+        graph/TSPGraph.cpp
+        graph/TSPGraph.h
+        structures/ListImpl.cpp
+        ##xmlParser/xmltest.cpp
+)
