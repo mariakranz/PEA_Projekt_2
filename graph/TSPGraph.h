@@ -12,17 +12,21 @@ private:
     double** adjacencyMatrix;                      //macierz sąsiedztwa - tablica dwuwymiarowa
     //int loadDataFromFile(const char* filePath);
 
+
+
 public:
     explicit TSPGraph(int verticesNumber);
-//    TSPGraph();
+    TSPGraph();
+    TSPGraph(int verticesNumber, double**& adjacencyMatrix);
     ~TSPGraph();
     double** getAdjMatrix();
-    int getVerticesNumber() const;
+    int getVerticesNumber();
 
-    int addVerticle(int verticle);                          //dodaje rzad do macierzy sasiedztwa i powieksza liczbe wierzcholkow
+    void loadMatrix(int verticesCount, double **&matrix);
     int addEdgeCost(int tail, int head, double cost);       //zwraca -1 jak operacja nie mozliwa - gdy tail = head
 
-    void tabuSearch();
+    double* tabuSearch();
+
 };
 
 

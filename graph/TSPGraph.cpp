@@ -5,6 +5,11 @@
 #include <climits>
 #include "TSPGraph.h"
 
+TSPGraph::TSPGraph(int verticesNumber, double **&adjacencyMatrix) {
+    this->verticesNumber = verticesNumber;
+    this->adjacencyMatrix = adjacencyMatrix;
+}
+
 TSPGraph::TSPGraph(int verticesNumber) {
     this->verticesNumber = verticesNumber;
     adjacencyMatrix = new double * [verticesNumber];                 //tworzenie macierzy sasiedztwa o odpowiednim rozmiarze
@@ -14,10 +19,12 @@ TSPGraph::TSPGraph(int verticesNumber) {
     }
 }
 
-//TSPGraph::TSPGraph() {
-//    verticesNumber = 0;
-//    adjacencyMatrix = new
-//}
+TSPGraph::TSPGraph() {
+    verticesNumber = 0;
+    adjacencyMatrix = nullptr;
+}
+
+
 
 TSPGraph::~TSPGraph() {
     if (adjacencyMatrix != nullptr) {
@@ -40,16 +47,26 @@ double **TSPGraph::getAdjMatrix() {
     return adjacencyMatrix;
 }
 
-int TSPGraph::getVerticesNumber() const {
+int TSPGraph::getVerticesNumber(){
     return verticesNumber;
 }
 
-int TSPGraph::addVerticle(int verticle) {
-    return 0;
-}
-
-//int TSPGraph::loadDataFromFile(const char *filePath) {
-//    return 0;
+//double* TSPGraph::tabuSearch() {
+////    double* initialSolution = new double [verticesNumber];
+////    double initialCost = 0;
+////    for(int i = 0; i < verticesNumber; i++){
+////        initialSolution[i] = i;
+////        if(i == verticesNumber-1) {
+////            initialCost += adjacencyMatrix[i][0];
+////        }else{
+////            initialCost += adjacencyMatrix[i][i+1];
+////        }
+////    }
+////
+////    double* bestSolution = initialSolution;
+////
+////    return bestSolution;
+//
 //}
 
 
