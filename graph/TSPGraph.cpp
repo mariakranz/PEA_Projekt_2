@@ -5,17 +5,17 @@
 #include <climits>
 #include "TSPGraph.h"
 
-TSPGraph::TSPGraph(int verticesNumber, double **&adjacencyMatrix) {
+TSPGraph::TSPGraph(int verticesNumber, int **&adjacencyMatrix) {
     this->verticesNumber = verticesNumber;
     this->adjacencyMatrix = adjacencyMatrix;
 }
 
 TSPGraph::TSPGraph(int verticesNumber) {
     this->verticesNumber = verticesNumber;
-    adjacencyMatrix = new double * [verticesNumber];                 //tworzenie macierzy sasiedztwa o odpowiednim rozmiarze
+    adjacencyMatrix = new int * [verticesNumber];                 //tworzenie macierzy sasiedztwa o odpowiednim rozmiarze
     for (int i = 0; i < verticesNumber; i++) {
-        adjacencyMatrix[i] = new double [verticesNumber];
-        adjacencyMatrix[i][i] = (double)INT_MAX;                    //wypełnianie wartosci po przekatnej jako nieskonczonosc
+        adjacencyMatrix[i] = new int [verticesNumber];
+        adjacencyMatrix[i][i] = INT_MAX;                    //wypełnianie wartosci po przekatnej jako nieskonczonosc
     }
 }
 
@@ -35,7 +35,7 @@ TSPGraph::~TSPGraph() {
     }
 }
 
-int TSPGraph::addEdgeCost(int tail, int head, double cost) {
+int TSPGraph::addEdgeCost(int tail, int head, int cost) {
     if (head == tail) {
         return -1;
     }
@@ -43,7 +43,7 @@ int TSPGraph::addEdgeCost(int tail, int head, double cost) {
     return 0;
 }
 
-double **TSPGraph::getAdjMatrix() {
+int **TSPGraph::getAdjMatrix() {
     return adjacencyMatrix;
 }
 

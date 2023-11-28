@@ -9,7 +9,7 @@
 class TSPGraph {
 private:
     int verticesNumber;
-    double** adjacencyMatrix;                      //macierz sąsiedztwa - tablica dwuwymiarowa
+    int** adjacencyMatrix;                      //macierz sąsiedztwa - tablica dwuwymiarowa
     //int loadDataFromFile(const char* filePath);
 
 
@@ -17,15 +17,15 @@ private:
 public:
     explicit TSPGraph(int verticesNumber);
     TSPGraph();
-    TSPGraph(int verticesNumber, double**& adjacencyMatrix);
+    TSPGraph(int verticesNumber, int**& adjacencyMatrix);
     ~TSPGraph();
-    double** getAdjMatrix();
+    int** getAdjMatrix();
     int getVerticesNumber();
 
-    void loadMatrix(int verticesCount, double **&matrix);
-    int addEdgeCost(int tail, int head, double cost);       //zwraca -1 jak operacja nie mozliwa - gdy tail = head
+    void loadMatrix(int verticesCount, int **&matrix);
+    int addEdgeCost(int tail, int head, int cost);       //zwraca -1 jak operacja nie mozliwa - gdy tail = head
 
-    double* tabuSearch();
+    int* tabuSearch();
 
 };
 

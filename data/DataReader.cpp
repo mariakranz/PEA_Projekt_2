@@ -39,8 +39,8 @@ TSPGraph *DataReader::createGraphFromTheData(const char* filePath) {
             tinyxml2::XMLElement* vertexElement = root->FirstChildElement("graph")->FirstChildElement("vertex");
             int row = 0;
             int vertCount = 0;
-            std::list<double> data;
-            double** matrix;
+            std::list<int> data;
+            int** matrix;
 
             while (vertexElement) {
 //                std::cout << "Vertex:" << std::endl;
@@ -49,7 +49,7 @@ TSPGraph *DataReader::createGraphFromTheData(const char* filePath) {
                 tinyxml2::XMLElement* edgeElement = vertexElement->FirstChildElement("edge");
                 while (edgeElement) {
                     const char* costAttribute = edgeElement->Attribute("cost");
-                    double cost = std::stod(costAttribute);
+                    int cost = (int)std::stod(costAttribute);
                     const char* edgeValue = edgeElement->GetText();
                     int column = std::stoi(edgeValue);
 
@@ -75,10 +75,10 @@ TSPGraph *DataReader::createGraphFromTheData(const char* filePath) {
                 if(row == 0){
                     vertCount++;
                     std::cout << vertCount << std::endl;
-                    matrix = new double * [vertCount];                 //tworzenie macierzy sasiedztwa o odpowiednim rozmiarze
+                    matrix = new int * [vertCount];                 //tworzenie macierzy sasiedztwa o odpowiednim rozmiarze
                     for (int i = 0; i < vertCount; i++)
                     {
-                        matrix[i] = new double [vertCount];
+                        matrix[i] = new int [vertCount];
                         matrix[i][i] = (double)INT_MAX;                    //wypełnianie wartosci po przekatnej jako nieskonczonosc
                         if(i != 0)
                         {

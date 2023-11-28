@@ -5,7 +5,7 @@
 #include <iostream>
 #include "GraphRep.h"
 
-void GraphRep::printAdjacencyMatrix(double **table, int verticesNum) {
+void GraphRep::printAdjacencyMatrix(int **table, int verticesNum) {
     std::cout << "Macierz sasiedztwa:" << std::endl;
     std::cout << "     ";
     for (int i = 0; i < verticesNum; i++){
@@ -20,7 +20,7 @@ void GraphRep::printAdjacencyMatrix(double **table, int verticesNum) {
         for (int j = 0; j < verticesNum; j++){
             std::cout.width(10);
             double cost = table[i][j];
-            if (cost == (double)INT_MAX) std::cout << "-";
+            if (cost == INT_MAX) std::cout << "-";
             else std::cout << cost;
         }
         std::cout << std::endl;
