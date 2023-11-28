@@ -12,5 +12,4 @@ add_executable(PEA_Projekt2 main.cpp
         xmlParser/tinyxml2.h
         graph/TSPGraph.cpp
         graph/TSPGraph.h
-        ##xmlParser/xmltest.cpp
 )
