@@ -13,8 +13,8 @@ void temp();
 
 int main() {
     cout << "Autorka: Maria Kranz, nr indeksu: 263985" << endl;
-    //menu();
-    temp();
+    menu();
+    //temp();
 
     return 0;
 
@@ -22,7 +22,7 @@ int main() {
 
 void temp(){
 
-    TSPGraph* graph = DataReader::createGraphFromTheData("ftv55.xml");                           //ftv55.atsp(1608), ftv170.atsp (2755) , rgb358.atsp (1163)
+    TSPGraph* graph = DataReader::createGraphFromTheData("ftv6_1.xml");                           //ftv55.atsp(1608), ftv170.atsp (2755) , rgb358.atsp (1163)
     GraphRep::printAdjacencyMatrix(graph->getAdjMatrix(), graph->getVerticesNumber());
 
     std::vector<int> solution = graph->greedyTSP();
@@ -63,7 +63,9 @@ void temp(){
 void menu(){
     string filePath;
     TSPGraph *graph = nullptr;
+    TabooSearch *ts = new TabooSearch();
     int time;
+    int neighborhood;
     char choice;
     std::vector<int> solution;
 
@@ -92,6 +94,7 @@ void menu(){
                 delete graph;                       //usun stary graf (jesli byl)
                 graph = DataReader::createGraphFromTheData(filePath.c_str());
                 if (graph != nullptr){
+                    ts->setGraph(graph);
                     GraphRep::printAdjacencyMatrix(graph->getAdjMatrix(), graph->getVerticesNumber());
                 }else{
                     cerr << "Bledy przy odczytywaniu danych." << endl;
@@ -100,8 +103,12 @@ void menu(){
             case '2':
                 cout << "Podaj czas [ms]: ";
                 cin >> time;
+                ts->setMaxTime(time);
                 break;
             case '3':
+                menuChoseNeighborhood();
+                cin >> neighborhood;
+                ts->setNeighborhoodType(static_cast<neighborhoodType>(neighborhood));
                 break;
             case '4':
                 if(graph){
@@ -118,7 +125,8 @@ void menu(){
                     cout << "Koszt: " << graph->calculateTour(solution) << endl;
 
 //                    solution = graph->tabuSearch(1000, 10, solution);
-                    TabooSearch* ts = new TabooSearch(graph);
+//                    TabooSearch* ts = new TabooSearch(graph);
+
                     solution = ts->tabuSearch(1000, 10, solution);
                     cout << "Algorytm Tabu Search\n"
                             "Trasa: ";
@@ -150,7 +158,8 @@ void menu(){
 }
 
 void menuChoseNeighborhood(){
-    char choice;
-
-
+    cout << "Wybierz sasiedztwo:\n"
+            "1. Swap.\n"
+            "2. Reverse.\n"
+            "3. Insert.\n";
 }
