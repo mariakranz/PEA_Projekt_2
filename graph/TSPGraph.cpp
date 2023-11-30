@@ -96,65 +96,65 @@ int TSPGraph::calculateTour(std::vector<int> tour) {
     return res;
 }
 
-std::vector<int> TSPGraph::tabuSearch(int iterations, int tabooSize, std::vector<int> initialSolution) {
-    std::vector<int> bestSolution = initialSolution;
-    std::vector<int> bestCandidate = initialSolution;
-    std::vector<std::vector<int>> tabooList;
-    tabooList.push_back(initialSolution);
-
-    for(; iterations > 0; iterations--){
-        std::vector<std::vector<int>> neighborhoodSolutions = getNeighborhoodSolutions(bestCandidate);
-        bestCandidate = neighborhoodSolutions[0];
-
-        for(std::vector<int> candidate: neighborhoodSolutions){
-            int candidateCost = calculateTour(candidate);
-            int bestCandidateTour = calculateTour(bestCandidate);
-            if((candidateCost < bestCandidateTour) && !candidateInTabooList(tabooList, candidate)){
-                bestCandidate = candidate;
-            }
-        }
-
-        if(calculateTour(bestCandidate) < calculateTour(bestSolution)){
-            bestSolution = bestCandidate;
-        }
-
-        tabooList.push_back(bestCandidate);
-        if(tabooList.size() > tabooSize){
-            tabooList.erase(tabooList.begin());
-        }
-    }
-
-    std::destroy(bestCandidate.begin(), bestCandidate.end());
-    return bestSolution;
-}
-
-std::vector<std::vector<int>> TSPGraph::getNeighborhoodSolutions(std::vector<int> tour) {
-    std::vector<std::vector<int>> neighborhoodSolutions;
-
-    for(int i = 1; i < tour.size() - 1; i++){
-        for(int j = 1; j < tour.size() - 1; j++) {
-            if (i == j) continue;
-            neighborhoodSolutions.push_back(swapPositions(tour, i, j));
-        }
-    }
-
-    return neighborhoodSolutions;
-}
-
-std::vector<int> TSPGraph::swapPositions(std::vector<int> tour, int index1, int index2) {
-    if (index1 < tour.size() && index2 < tour.size()) {
-        std::swap(tour[index1], tour[index2]);
-        return tour;
-    }
-    return {};
-}
-
-bool TSPGraph::candidateInTabooList(std::vector<std::vector<int>> &tabooList, std::vector<int> &candidate) {
-    for(std::vector<int> element: tabooList){
-        if (std::equal(element.begin(), element.end(), candidate.begin(), candidate.end())) return true;
-    }
-    return false;
-}
+//std::vector<int> TSPGraph::tabuSearch(int iterations, int tabooSize, std::vector<int> initialSolution) {
+//    std::vector<int> bestSolution = initialSolution;
+//    std::vector<int> bestCandidate = initialSolution;
+//    std::vector<std::vector<int>> tabooList;
+//    tabooList.push_back(initialSolution);
+//
+//    for(; iterations > 0; iterations--){
+//        std::vector<std::vector<int>> neighborhoodSolutions = getNeighborhoodSolutions(bestCandidate);
+//        bestCandidate = neighborhoodSolutions[0];
+//
+//        for(std::vector<int> candidate: neighborhoodSolutions){
+//            int candidateCost = calculateTour(candidate);
+//            int bestCandidateTour = calculateTour(bestCandidate);
+//            if((candidateCost < bestCandidateTour) && !candidateInTabooList(tabooList, candidate)){
+//                bestCandidate = candidate;
+//            }
+//        }
+//
+//        if(calculateTour(bestCandidate) < calculateTour(bestSolution)){
+//            bestSolution = bestCandidate;
+//        }
+//
+//        tabooList.push_back(bestCandidate);
+//        if(tabooList.size() > tabooSize){
+//            tabooList.erase(tabooList.begin());
+//        }
+//    }
+//
+//    std::destroy(bestCandidate.begin(), bestCandidate.end());
+//    return bestSolution;
+//}
+//
+//std::vector<std::vector<int>> TSPGraph::getNeighborhoodSolutions(std::vector<int> tour) {
+//    std::vector<std::vector<int>> neighborhoodSolutions;
+//
+//    for(int i = 1; i < tour.size() - 1; i++){
+//        for(int j = 1; j < tour.size() - 1; j++) {
+//            if (i == j) continue;
+//            neighborhoodSolutions.push_back(swapPositions(tour, i, j));
+//        }
+//    }
+//
+//    return neighborhoodSolutions;
+//}
+//
+//std::vector<int> TSPGraph::swapPositions(std::vector<int> tour, int index1, int index2) {
+//    if (index1 < tour.size() && index2 < tour.size()) {
+//        std::swap(tour[index1], tour[index2]);
+//        return tour;
+//    }
+//    return {};
+//}
+//
+//bool TSPGraph::candidateInTabooList(std::vector<std::vector<int>> &tabooList, std::vector<int> &candidate) {
+//    for(std::vector<int> element: tabooList){
+//        if (std::equal(element.begin(), element.end(), candidate.begin(), candidate.end())) return true;
+//    }
+//    return false;
+//}
 
 
 

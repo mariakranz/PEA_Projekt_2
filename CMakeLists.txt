@@ -12,4 +12,6 @@ add_executable(PEA_Projekt2 main.cpp
         xmlParser/tinyxml2.h
         graph/TSPGraph.cpp
         graph/TSPGraph.h
+        algorithms/TabooSearch.cpp
+        algorithms/TabooSearch.h
 )

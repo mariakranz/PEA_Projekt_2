@@ -13,11 +13,10 @@ class TSPGraph {
 private:
     int verticesNumber;
     int** adjacencyMatrix;                      //macierz sąsiedztwa - tablica dwuwymiarowa
-    //int loadDataFromFile(const char* filePath);
 
-    std::vector<std::vector<int>> getNeighborhoodSolutions(std::vector<int> tour);
-    std::vector<int> swapPositions(std::vector<int> tour, int index1, int index2);
-    bool candidateInTabooList(std::vector<std::vector<int>>& tabooList, std::vector<int>& candidate);
+//    std::vector<std::vector<int>> getNeighborhoodSolutions(std::vector<int> tour);
+//    std::vector<int> swapPositions(std::vector<int> tour, int index1, int index2);
+//    bool candidateInTabooList(std::vector<std::vector<int>>& tabooList, std::vector<int>& candidate);
 
 public:
     explicit TSPGraph(int verticesNumber);
@@ -32,7 +31,7 @@ public:
 
     std::vector<int> greedyTSP();                       //zwraca sciezke uzyskana za pomoca metody zachlannej
 
-    std::vector<int> tabuSearch(int iterations, int tabooSize, std::vector<int> initialSolution);
+//    std::vector<int> tabuSearch(int iterations, int tabooSize, std::vector<int> initialSolution);
 
     int calculateTour(std::vector<int> tour);
 };
