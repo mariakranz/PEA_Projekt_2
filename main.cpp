@@ -101,9 +101,9 @@ void menu(){
                 }
                 break;
             case '2':
-                cout << "Podaj czas [ms]: ";
+                cout << "Podaj czas [s]: ";
                 cin >> time;
-                ts->setMaxTime(time);
+                ts->setStopTime(time);
                 break;
             case '3':
                 menuChoseNeighborhood();
@@ -122,20 +122,28 @@ void menu(){
                     }
                     cout << endl;
 
-                    cout << "Koszt: " << graph->calculateTour(solution) << endl;
+                    cout << "Koszt: " << graph->calculateTour(solution) << endl << endl;
 
 //                    solution = graph->tabuSearch(1000, 10, solution);
 //                    TabooSearch* ts = new TabooSearch(graph);
 
-                    solution = ts->tabuSearch(1000, 10, solution);
-                    cout << "Algorytm Tabu Search\n"
-                            "Trasa: ";
+                    //solution = ts->tabuSearch(1000, 10, solution);
+
+
+
+                    cout << "Algorytm Tabu Search" << endl;
+                    cout << "Warunek stopu: " << ts->getStopTime() << "s." << endl;
+                    cout << "Sasiedztwo: " << ts->getNeighborhoodType() << endl;
+
+                    solution = ts->run(500, solution);
+                    cout << "Trasa: ";
                     for (int city : solution) {
                         cout << city << " ";
                     }
                     cout << endl;
 
                     cout << "Koszt: " << graph->calculateTour(solution) << endl;
+                    cout << "Najlepsze rozwiazanie znalezione po " << ts->getBestSolutionFoundTime() << "s." << endl;
                 }else{
                     cout << "Nie zaladowano grafu." << endl;
                 }
@@ -154,12 +162,15 @@ void menu(){
                 break;
         }
     }while (choice != '0');
+
     delete graph;
+    delete ts;
 }
 
 void menuChoseNeighborhood(){
     cout << "Wybierz sasiedztwo:\n"
-            "1. Swap.\n"
+            "1. Swap (domyslny).\n"
             "2. Reverse.\n"
-            "3. Insert.\n";
+            "3. Insert.\n"
+            "Wprowadz numer: ";
 }

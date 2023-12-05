@@ -54,40 +54,55 @@ int TSPGraph::getVerticesNumber(){
 
 std::vector<int> TSPGraph::greedyTSP() {
     std::vector<bool> visited(verticesNumber, false);
-    std::vector<int> path;
-    path.reserve(verticesNumber);
+    std::vector<int> path(verticesNumber);
+    std::vector<int> minPath(verticesNumber);
+    int minCost = INT_MAX;
 
-    // Wybieramy pierwsze miasto jako startowe
-    int currentVertex = 0;
-    path.push_back(currentVertex);
-    visited[currentVertex] = true;
+    for(int i = 0; i < verticesNumber; i++){    //obliczamy sciezke zachlannie dla kazdego wierzcholka
+        // Wybieramy pierwsze miasto jako startowe
+        int currentVertex = i;
+        path[0] = currentVertex;
+        visited[currentVertex] = true;
 
-    for (int i = 1; i < verticesNumber; ++i) {
-        int minDistance = INT_MAX;
-        int nextVertex = -1;
+        for (int i = 1; i < verticesNumber; ++i) {
+            int minDistance = INT_MAX;
+            int nextVertex = -1;
 
-        // Szukamy najbliższego nieodwiedzonego miasta
-        for (int j = 0; j < verticesNumber; ++j) {
-            if (!visited[j]) {
-                int distance = adjacencyMatrix[currentVertex][j];
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    nextVertex = j;
+            // Szukamy najbliższego nieodwiedzonego miasta
+            for (int j = 0; j < verticesNumber; ++j) {
+                if (!visited[j]) {
+                    int distance = adjacencyMatrix[currentVertex][j];
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nextVertex = j;
+                    }
                 }
             }
+
+            // Dodajemy najbliższe miasto do ścieżki
+            //path.push_back(nextVertex);
+            visited[nextVertex] = true;
+            path[i] = nextVertex;
+            currentVertex = nextVertex;
         }
 
-        // Dodajemy najbliższe miasto do ścieżki
-        path.push_back(nextVertex);
-        visited[nextVertex] = true;
-        currentVertex = nextVertex;
-    }
+        //oblicz sciezke i jesli mniejsza nich dotychczasowa znaleziona to ja zapamietaj
 
-    std::destroy(visited.begin(), visited.end());
-    return path;
+        int cost = calculateTour(path);
+        if( cost < minCost){
+            minPath.assign(path.begin(), path.end());
+            minCost = cost;
+        }
+        for(auto && v : visited){
+            v = false;
+        }
+
+    }
+    return minPath;
 }
 
 int TSPGraph::calculateTour(std::vector<int> tour) {
+    //if (tour.empty()) return INT_MAX;
     int res = 0;
     for(int i = 0; i < verticesNumber - 1; i++){
         res+= adjacencyMatrix[tour[i]][tour[i+1]];

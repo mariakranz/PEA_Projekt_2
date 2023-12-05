@@ -15,7 +15,7 @@ private:
 
 public:
     static TSPGraph* createGraphFromTheData(const char* filePath);
-    static TSPGraph* createRandomGraph(int verticesNumber);
+    //static int savePathToFile(std::vector<int>)
 };
 
 

@@ -15,8 +15,9 @@ class TabooSearch {
 private:
     TSPGraph* graph;
     neighborhoodType chosenNeighborhoodType;
-    int maxTime;                                //[s]
+    int stopTime;                                //[s]
     //int chosenNeighborhoodType;
+    double bestSolutionFoundTime;
 
 
     //3 definicje sasiedztwa
@@ -27,15 +28,22 @@ private:
     std::vector<std::vector<int>> getNeighborhoodSolutions(std::vector<int> tour);
     bool candidateInTabooList(std::vector<std::vector<int>>& tabooList, std::vector<int>& candidate);
 
+    std::vector<int> randomSolution(int verticesNumber);
+    std::vector<int> shuffleHalf(std::vector<int> path);
+
 public:
     explicit TabooSearch( TSPGraph *&graph1);
     TabooSearch();
     std::vector<int> tabuSearch(int iterations, int tabooSize, const std::vector<int>& initialSolution);
     std::vector<int> tabuSearchV2(int iterations, const std::vector<int>& initialSolution);
+    std::vector<int> run(int tabooSize, const std::vector<int>& initialSolution);
 
     void setGraph(TSPGraph *&graph1);
-    void setMaxTime(int time);
+    void setStopTime(int time);
     void setNeighborhoodType(neighborhoodType newNeighborhoodType);
+    double getBestSolutionFoundTime();
+    int getStopTime();
+    std::string getNeighborhoodType();
 };
 
 
