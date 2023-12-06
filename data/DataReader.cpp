@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <fstream>
 #include <iterator>
 #include <list>
 #include "DataReader.h"
@@ -10,7 +11,7 @@
 #include "../graph/TSPGraph.h"
 
 
-TSPGraph *DataReader::createGraphFromTheData(const char* filePath) {
+TSPGraph *DataReader::createGraphFromFile(const char* filePath) {
     tinyxml2::XMLDocument xmlDoc;
 
     // Ładowanie pliku XML
@@ -97,10 +98,10 @@ TSPGraph *DataReader::createGraphFromTheData(const char* filePath) {
             std::destroy(data.begin(), data.end());
             return new TSPGraph(vertCount, matrix);
         } else {
-            std::cerr << "Błąd: Nieprawidłowy format pliku XML." << std::endl;
+            std::cerr << "Blad: Nieprawidlowy format pliku XML." << std::endl;
         }
     } else {
-        std::cerr << "Błąd: Nie można załadować pliku XML." << std::endl;
+        std::cerr << "Blad: Nie mozna zaladować pliku XML." << std::endl;
     }
 
     return nullptr;
@@ -132,4 +133,53 @@ int DataReader::extractNumber(const char* input) {
         std::cerr << "Błąd konwersji: " << e.what() << std::endl;
         return -1; // Wartość domyślna w przypadku błędu
     }
+}
+
+int DataReader::savePathToFile(std::vector<int> &path, const char* filename) {
+    // Create and open a text file
+    std::ofstream MyFile(filename);
+
+    if (!MyFile.is_open()) return -1;
+    // Write to the file
+    MyFile << path.size() << "\n";
+
+    for(int i : path){
+        MyFile << i << "\n";
+        if(MyFile.fail()){
+            MyFile.close();
+            return -1;
+        }
+    }
+
+    MyFile << path[0] << "\n";
+
+    // Close the file
+    MyFile.close();
+    return 0;
+}
+
+int DataReader::calculatePathFromFile(const char *filename, TSPGraph*& graph) {
+    std::ifstream MyFile(filename);
+
+    if (!MyFile.is_open()) return -1;
+
+    int verticesNumber = 0;
+
+    MyFile >> verticesNumber;
+    if(MyFile.fail()){
+        MyFile.close();
+        return -1;
+    }
+
+    std::vector<int> path(verticesNumber);
+    for(int i = 0; i < verticesNumber; i++){
+        MyFile >> path[i];
+
+        if(MyFile.fail()){
+            MyFile.close();
+            return -1;
+        }
+    }
+
+    return graph->calculateTour(path);
 }

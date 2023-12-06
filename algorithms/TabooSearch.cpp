@@ -197,7 +197,7 @@ std::vector<int> TabooSearch::run(int tabooSize, const std::vector<int> &initial
     std::vector<int> bestSolution = initialSolution;
     std::vector<int> bestCandidate = initialSolution;
 
-    std::vector<std::vector<int>> tabooList(tabooSize);
+    std::vector<std::vector<int>> tabooList(tabooSize);     // fixme: zmienic na list
     tabooList.push_back(initialSolution);
     //int maxNoImprovement = graph->getVerticesNumber() / 10;
     int maxNoImprovement = 7 * graph->getVerticesNumber();

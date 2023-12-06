@@ -14,8 +14,9 @@ private:
     static int extractNumber(const char* input);
 
 public:
-    static TSPGraph* createGraphFromTheData(const char* filePath);
-    //static int savePathToFile(std::vector<int>)
+    static TSPGraph* createGraphFromFile(const char* filePath);
+    static int savePathToFile(std::vector<int>& path, const char* filename);
+    static int calculatePathFromFile(const char* filename, TSPGraph*& graph);
 };
 
 
