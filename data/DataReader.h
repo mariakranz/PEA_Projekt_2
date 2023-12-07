@@ -10,13 +10,10 @@
 #include "../graph/TSPGraph.h"
 
 class DataReader {
-private:
-    static int extractNumber(const char* input);
-
 public:
-    static TSPGraph* createGraphFromFile(const char* filePath);
-    static int savePathToFile(std::vector<int>& path, const char* filename);
-    static int calculatePathFromFile(const char* filename, TSPGraph*& graph);
+    static TSPGraph* createGraphFromFile(const char* filePath);                 //wczytuje dane z pliku xml do macierzy
+    static int savePathToFile(std::vector<int>& path, const char* filename);    //zapisuje sciezke do pliku
+    static int calculatePathFromFile(const char* filename, TSPGraph*& graph);   //odczytuje sciezke z pliku i liczy jej koszt
 };
 
 

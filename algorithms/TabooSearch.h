@@ -7,6 +7,7 @@
 
 
 #include <vector>
+#include <list>
 #include "../graph/TSPGraph.h"
 
 enum neighborhoodType{swap = 1, reverse = 2, insert = 3};
@@ -16,27 +17,23 @@ private:
     TSPGraph* graph;
     neighborhoodType chosenNeighborhoodType;
     int stopTime;                                //[s]
-    //int chosenNeighborhoodType;
     double bestSolutionFoundTime;
 
 
     //3 definicje sasiedztwa
     std::vector<int> swapPositions(std::vector<int> tour, int index1, int index2);
     std::vector<int> reverseNumbers(std::vector<int> tour, int startingIndex, int endingIndex);
-    std::vector<int> insertBeforeNumber(std::vector<int> tour, int numberIndex, int targetIndex);
+    std::vector<int> insertBeforeNumber(std::vector<int> tour, int numberIndex, int targetIndex);           //fixme - zle dziala
 
-    std::vector<std::vector<int>> getNeighborhoodSolutions(std::vector<int> tour);
-    bool candidateInTabooList(std::vector<std::vector<int>>& tabooList, std::vector<int>& candidate);
+    std::list<std::vector<int>> getNeighborhoodSolutions(std::vector<int> tour);                    //zwraca liste sasiadow
+    bool candidateInTabooList(std::list<std::vector<int>>& tabooList, std::vector<int>& candidate); //zwraca czy kandydat znajduje sie w liscie tabu
 
-    std::vector<int> randomSolution(int verticesNumber);
-    std::vector<int> shuffleHalf(std::vector<int> path);
+    std::vector<int> randomSolution(int verticesNumber);                                            //generuje zupelnie randomowa sciezke
+    std::vector<int> shuffleHalf(std::vector<int> path);                                            //generuje randomowa polowe
 
 public:
-    explicit TabooSearch( TSPGraph *&graph1);
     TabooSearch();
-    std::vector<int> tabuSearch(int iterations, int tabooSize, const std::vector<int>& initialSolution);
-    std::vector<int> tabuSearchV2(int iterations, const std::vector<int>& initialSolution);
-    std::vector<int> run(int tabooSize, const std::vector<int>& initialSolution);
+    std::vector<int> run(int tabooSize, const std::vector<int>& initialSolution);                   //rozpoczyna algorytm Tabu Search
 
     void setGraph(TSPGraph *&graph1);
     void setStopTime(int time);

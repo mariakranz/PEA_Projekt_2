@@ -6,15 +6,8 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <list>
 #include "TabooSearch.h"
-
-TabooSearch::TabooSearch( TSPGraph *&graph1) {
-    graph = graph1;
-    chosenNeighborhoodType = swap;
-    stopTime = 30;   //[s]
-    bestSolutionFoundTime = 0;
-}
-
 
 TabooSearch::TabooSearch() {
     graph = nullptr;
@@ -40,10 +33,7 @@ std::vector<int> TabooSearch::reverseNumbers(std::vector<int> tour, int starting
     }
 
     while (startingIndex < endingIndex) {
-        // Zamień elementy na końcach zakresu
         std::swap(tour[startingIndex], tour[endingIndex]);
-
-        // Przesuń indeksy wewnątrz zakresu
         ++startingIndex;
         --endingIndex;
     }
@@ -58,10 +48,8 @@ std::vector<int> TabooSearch::insertBeforeNumber(std::vector<int> tour, int numb
     return tour;
 }
 
-std::vector<std::vector<int>> TabooSearch::getNeighborhoodSolutions(std::vector<int> tour) {
-    std::vector<std::vector<int>> neighborhoodSolutions;
-//    int rand = std::rand() % 2;
-//    std::uniform_int_distribution<int> distribution(0, 1);
+std::list<std::vector<int>> TabooSearch::getNeighborhoodSolutions(std::vector<int> tour) {
+    std::list<std::vector<int>> neighborhoodSolutions;
 
     switch (chosenNeighborhoodType) {
         case swap:
@@ -83,7 +71,7 @@ std::vector<std::vector<int>> TabooSearch::getNeighborhoodSolutions(std::vector<
         case insert:
             for(int i = 0; i < tour.size() - 1; i++) {
                 for (int j = i + 1; j < tour.size(); j++) {
-                    neighborhoodSolutions.push_back(insertBeforeNumber(tour, j, i));;
+                    neighborhoodSolutions.push_back(insertBeforeNumber(tour, j, i));
                 }
             }
             break;
@@ -92,93 +80,13 @@ std::vector<std::vector<int>> TabooSearch::getNeighborhoodSolutions(std::vector<
     return neighborhoodSolutions;
 }
 
-bool TabooSearch::candidateInTabooList(std::vector<std::vector<int>> &tabooList, std::vector<int> &candidate) {
-    for(std::vector<int> element: tabooList){
-        if (std::equal(element.begin(), element.end(), candidate.begin(), candidate.end())) return true;
+bool TabooSearch::candidateInTabooList(std::list<std::vector<int>> &tabooList, std::vector<int> &candidate) {
+    for(const auto& element : tabooList) {
+        if (candidate == element) {
+            return true;
+        }
     }
     return false;
-}
-
-std::vector<int> TabooSearch::tabuSearch(int iterations, int tabooSize, const std::vector<int>& initialSolution) {
-    std::vector<int> bestSolution = initialSolution;
-    std::vector<int> bestCandidate = initialSolution;
-    std::vector<std::vector<int>> tabooList;
-    tabooList.push_back(initialSolution);
-
-    //std::vector<std::vector<int>> tabu(graph->getVerticesNumber() - 1, std::vector<int>(graph->getVerticesNumber() - 1, 0));
-
-    for(; iterations > 0; iterations--){
-        std::vector<std::vector<int>> neighborhoodSolutions = getNeighborhoodSolutions(bestCandidate);
-        bestCandidate = neighborhoodSolutions[0];
-        unsigned long  long g = neighborhoodSolutions.size();   //niepotrzebne
-
-        for(std::vector<int> candidate: neighborhoodSolutions){
-            int candidateCost = graph->calculateTour(candidate);
-            int bestCandidateTour = graph->calculateTour(bestCandidate);
-            if((candidateCost < bestCandidateTour) && !candidateInTabooList(tabooList, candidate)){
-                bestCandidate = candidate;
-            }
-        }
-
-        if(graph->calculateTour(bestCandidate) < graph->calculateTour(bestSolution)){
-            bestSolution = bestCandidate;
-        }
-
-        tabooList.push_back(bestCandidate);
-        if(tabooList.size() > tabooSize){
-            tabooList.erase(tabooList.begin());
-        }
-    }
-
-    std::destroy(bestCandidate.begin(), bestCandidate.end());
-    return bestSolution;
-}
-
-std::vector<int> TabooSearch::tabuSearchV2(int iterations, const std::vector<int> &initialSolution) {
-    int vertNum = graph->getVerticesNumber();
-    std::vector<int> bestSolution = initialSolution;
-    std::vector<int> bestCandidate = initialSolution;
-    //std::vector<std::vector<int>> tabooMatrix(vertNum, std::vector<int>(vertNum, 0));    //tablica duwymiarowa N x N, wszedzie wartosc 0
-    std::vector<int> tabooList(vertNum, 0);
-
-    for(; iterations > 0; iterations--){
-
-//        for (int i = 0; i < vertNum; i++){
-//            for (int j = 0; j < vertNum ; j++){
-//                if (tabooMatrix[i][j] > 0)
-//                    tabooMatrix[i][j]--;
-//            }
-//        }
-        for(int i = 0; i < vertNum; i++){
-            if (tabooList[i] > 0){
-                tabooList[i]--;
-            }
-        }
-
-
-        std::vector<std::vector<int>> neighborhoodSolutions = getNeighborhoodSolutions(bestCandidate);
-        bestCandidate = neighborhoodSolutions[0];
-
-        for(std::vector<int> candidate: neighborhoodSolutions){
-            int candidateCost = graph->calculateTour(candidate);
-            int bestCandidateTour = graph->calculateTour(bestCandidate);
-//            if((candidateCost < bestCandidateTour) && !candidateInTabooList(tabooList, candidate)){
-//                bestCandidate = candidate;
-//            }
-        }
-
-        if(graph->calculateTour(bestCandidate) < graph->calculateTour(bestSolution)){
-            bestSolution = bestCandidate;
-        }
-
-//        tabooList.push_back(bestCandidate);
-//        if(tabooList.size() > tabooSize){
-//            tabooList.erase(tabooList.begin());
-//        }
-    }
-
-    std::destroy(bestCandidate.begin(), bestCandidate.end());
-    return bestSolution;
 }
 
 void TabooSearch::setNeighborhoodType(neighborhoodType newNeighborhoodType) {
@@ -196,59 +104,48 @@ void TabooSearch::setStopTime(int time) {
 std::vector<int> TabooSearch::run(int tabooSize, const std::vector<int> &initialSolution) {
     std::vector<int> bestSolution = initialSolution;
     std::vector<int> bestCandidate = initialSolution;
-
-    std::vector<std::vector<int>> tabooList(tabooSize);     // fixme: zmienic na list
+    std::list<std::vector<int>> tabooList;
     tabooList.push_back(initialSolution);
-    //int maxNoImprovement = graph->getVerticesNumber() / 10;
-    int maxNoImprovement = 7 * graph->getVerticesNumber();
+
+    int maxNoImprovement = 7 * graph->getVerticesNumber();                                                       //maksymalna liczba iteracji bez poprawy wyniku
     int noImprovementCount = 0;
 
-    //std::vector<std::vector<int>> tabu(graph->getVerticesNumber() - 1, std::vector<int>(graph->getVerticesNumber() - 1, 0));
-    const std::clock_t start_time = std::clock();
+    const std::clock_t start_time = std::clock();                                                                //rozpocznij odliczanie zegara
 
     while ((std::clock() - start_time) / CLOCKS_PER_SEC < stopTime) {
-        std::vector<std::vector<int>> neighborhoodSolutions = getNeighborhoodSolutions(bestCandidate);
-        bestCandidate = neighborhoodSolutions[0];
+        std::list<std::vector<int>> neighborhoodSolutions = getNeighborhoodSolutions(bestCandidate);        //pobierz liczbe sasiadow
+        bestCandidate = neighborhoodSolutions.front();
         int bestCandidateCost = graph->calculateTour(bestCandidate);
-        //unsigned long  long g = neighborhoodSolutions.size();   //niepotrzebne
 
-
-        for(std::vector<int> candidate: neighborhoodSolutions){     //znajdz najlepszego sasiada
-            if((std::clock() - start_time) / CLOCKS_PER_SEC >= stopTime) break;
-
+        for(std::vector<int> candidate: neighborhoodSolutions){                                                  //znajdz najlepszego sasiada
+            if((std::clock() - start_time) / CLOCKS_PER_SEC >= stopTime) break;                                  //sprawdzenie czy algorytm nie powinien zostac zakonczony
             int candidateCost = graph->calculateTour(candidate);
 
-            if((candidateCost < bestCandidateCost) && !candidateInTabooList(tabooList, candidate) && candidateCost >= 0){
-                //std::cout << bestCandidateCost << ": " << candidateCost << std::endl;
-                bestCandidate = candidate;
+            if((candidateCost < bestCandidateCost) && !candidateInTabooList(tabooList, candidate) && candidateCost >= 0){           //jesli kandydat ma mnijeszy koszt i nie znajduje sie w liscie tabu, to przyjmij go jako najlepszego kandydata
+                bestCandidate = candidate;                                                                          //fixme po naprawieniu insert usunac ostatni warunek
                 bestCandidateCost = candidateCost;
-
             }
         }
 
-        if(bestCandidateCost < graph->calculateTour(bestSolution)){
+        if(bestCandidateCost < graph->calculateTour(bestSolution)){                                     //jesli najlepszy kandydat jest lepszy niz najlepsze rozwiazanie, to przyjmij go jako najlepsze rozwiazanie
             bestSolution = bestCandidate;
             bestSolutionFoundTime = (std::clock() - (double)start_time) / CLOCKS_PER_SEC;
             std::cout << "Rozw: " << bestCandidateCost << " Czas:" << bestSolutionFoundTime << std::endl;
-        }else{
+        }else{                                                                                                //w przeciwnym wypadku zinkrementuj licznik iteracji bez poprawy
             noImprovementCount++;
         }
 
-        tabooList.push_back(bestCandidate);         //update taboo
-        if(tabooList.size() > tabooSize){
+        tabooList.push_back(bestCandidate);                                                                 //zaktualizuj liste tabu
+        if(tabooList.size() > tabooSize){                                                                      //jesli lista przekroczyla swoj maks, usun najstarszy element (FIFO)
             tabooList.erase(tabooList.begin());
         }
 
-        if (noImprovementCount >= maxNoImprovement) {           //jesli od dawna nie bylo zmiany (minimum lokalne) - wylosuj sciezke
-            //bestCandidate = randomSolution(graph->getVerticesNumber());
+        if (noImprovementCount >= maxNoImprovement) {                                                           //jesli od dawna nie bylo zmiany (minimum lokalne) - wylosuj sciezke
             bestCandidate = shuffleHalf(bestSolution);
-            //std::cout << "Losowanie" << std::endl;
             noImprovementCount = 0;
         }
     }
-    std::cout << "All time:" << (std::clock() - start_time) / CLOCKS_PER_SEC << std::endl;
 
-    //std::destroy(bestCandidate.begin(), bestCandidate.end());
     return bestSolution;
 }
 
@@ -257,7 +154,6 @@ std::vector<int> TabooSearch::randomSolution(int verticesNumber) {
     for (int i = 0; i < verticesNumber; ++i) {
         randomPath[i] = i;
     }
-    //std::random_shuffle(randomPath.begin(), randomPath.end());
     std::shuffle(randomPath.begin(), randomPath.end(), std::mt19937(std::random_device()()));
     return randomPath;
 }
