@@ -8,7 +8,7 @@
 
 class Test {
 public:
-    //rozmiar tabu zalezny od rozmiaru instancji (7*tabu.size)
+    //rozmiar tabu zalezny od rozmiaru instancji (100*graph.size)
     static void generateFile_BestSolutionInTime_ftv55(int numberOfInstances, int time);
     static void generateFile_BestSolutionInTime_ftv170(int numberOfInstances, int time);
     static void generateFile_BestSolutionInTime_rbg358(int numberOfInstances, int time);
