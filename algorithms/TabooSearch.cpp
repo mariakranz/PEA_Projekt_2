@@ -65,7 +65,6 @@ std::list<std::vector<int>> TabooSearch::getNeighborhoodSolutions(std::vector<in
         case reverse:
             for(int i = 0; i < tour.size() - 1; i++) {
                 for (int j = i + 1; j < tour.size(); j++) {
-                    if (i == j) continue;
                     neighborhoodSolutions.push_back(reverseNumbers(tour, i, j));
                 }
             }
@@ -124,7 +123,7 @@ std::vector<int> TabooSearch::run(int tabooSize, const std::vector<int> &initial
             int candidateCost = graph->calculateTour(candidate);
 
             if((candidateCost < bestCandidateCost) && !candidateInTabooList(tabooList, candidate)){           //jesli kandydat ma mnijeszy koszt i nie znajduje sie w liscie tabu, to przyjmij go jako najlepszego kandydata
-                bestCandidate = candidate;                                                                          //fixme po naprawieniu insert usunac ostatni warunek
+                bestCandidate = candidate;
                 bestCandidateCost = candidateCost;
             }
         }
