@@ -16,4 +16,6 @@ add_executable(PEA_Projekt2 main.cpp
         graph/TSPGraph.h
         algorithms/TabooSearch.cpp
         algorithms/TabooSearch.h
+        tests/Test.cpp
+        tests/Test.h
 )

@@ -4,11 +4,14 @@
 #include "representations/GraphRep.h"
 #include "graph/TSPGraph.h"
 #include "algorithms/TabooSearch.h"
+#include "tests/Test.h"
 
 using namespace std;
 
 void menu();
 void menuChoseNeighborhood();
+void testsDialog();
+void test();
 
 int main() {
     cout << "Autorka: Maria Kranz, nr indeksu: 263985" << endl;
@@ -31,11 +34,9 @@ void menu(){
                 "2. Wprowadzenie kryterium stopu.\n"
                 "3. Wybor sasiedztwa (taboo search).\n"
                 "4. Uruchomienie algorytmu Taboo search.\n"
-                "5. (nz)Ustawienie wspolczynnika zmiany temperatury dla SW.\n"
-                "6. (nz)Uruchomienie algorytmu SW.\n"
-                "7. Zapis sciezki rozwiazania do pliku (txt).\n"
-                "8. Obliczenie wartosci sciezki z pliku (txt).\n"
-                "9. Testy.\n"
+                "5. Zapis sciezki rozwiazania do pliku (txt).\n"
+                "6. Obliczenie wartosci sciezki z pliku (txt).\n"
+                "7. Testy.\n"
                 "0. Wyjdz z programu.\n"
                 "Wprowadz numer: ";
         cin >> choice;
@@ -84,7 +85,7 @@ void menu(){
                     cout << "Warunek stopu: " << ts->getStopTime() << "s." << endl;
                     cout << "Sasiedztwo: " << ts->getNeighborhoodType() << endl;
 
-                    solution = ts->run(500, solution);
+                    solution = ts->run(graph->getVerticesNumber() * 100, solution);
                     cout << "Trasa: ";
                     for (int city : solution) {
                         cout << city << " ";
@@ -97,10 +98,6 @@ void menu(){
                 }
                 break;
             case '5':
-                break;
-            case '6':
-                break;
-            case '7':
                 if(!solution.empty()){
                     cout << "Podaj nazwe pliku: ";
                     cin >> filePath;
@@ -113,7 +110,7 @@ void menu(){
                     cout << "Nie wygenerowano rozwiazania" << endl;
                 }
                 break;
-            case '8':
+            case '6':
                 if(graph){
                     cout << "Podaj nazwe pliku: ";
                     cin >> filePath;
@@ -128,7 +125,8 @@ void menu(){
                     cout << "Nie zaladowano grafu." << endl;
                 }
                 break;
-            case '9':
+            case '7':
+                testsDialog();
                 break;
         }
     }while (choice != '0');
@@ -137,10 +135,42 @@ void menu(){
     delete ts;
 }
 
-void menuChoseNeighborhood(){
+void menuChoseNeighborhood()
+{
     cout << "Wybierz sasiedztwo:\n"
             "1. Swap (domyslny).\n"
             "2. Reverse.\n"
             "3. Insert.\n"
             "Wprowadz numer: ";
+}
+
+void testsDialog()
+{
+    cout << "Pliki: ftv55.xml, ftv170.xml, rbg380 musza znajdowac sie w tym samym folderze co plik wykonywany .exe\n"
+            "Przewidywany czas testu: 6h\n"
+            "Kontynuowac? 'T' - tak, 'N' - nie\n";
+    char ans = 'N';
+    cin >> ans;
+    switch(ans)
+    {
+        default:
+            cout << "Nie ma takiej opcji." << endl;
+        case 'N':
+            break;
+        case 'T':
+            test();
+            break;
+    }
+}
+
+
+void test()
+{
+    Test::generateFile_BestSolutionInTime_ftv55(10, 120);
+    Test::generateFile_BestSolutionInTime_ftv170(10, 240);
+    Test::generateFile_BestSolutionInTime_rbg358(10, 360);
+
+//    Test::generateFile_BestSolutionInTime_ftv55v2(10, 120);
+//    Test::generateFile_BestSolutionInTime_ftv170v2(10, 240);
+//    Test::generateFile_BestSolutionInTime_rbg358v2(10, 360);
 }

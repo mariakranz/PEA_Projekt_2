@@ -35,12 +35,17 @@ public:
     TabooSearch();
     std::vector<int> run(int tabooSize, const std::vector<int>& initialSolution);                   //rozpoczyna algorytm Tabu Search
 
+
+
     void setGraph(TSPGraph *&graph1);
     void setStopTime(int time);
     void setNeighborhoodType(neighborhoodType newNeighborhoodType);
     double getBestSolutionFoundTime();
     int getStopTime();
     std::string getNeighborhoodType();
+
+
+    std::vector<int> runTests(int tabooSize, const std::vector<int>& initialSolution, const char* filePath);        //rozpoczyna algorytm Tabu Search i zapisuje wyniki do pliku
 };
 
 

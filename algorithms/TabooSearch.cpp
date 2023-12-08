@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <random>
 #include <list>
+#include <fstream>
 #include "TabooSearch.h"
 
 TabooSearch::TabooSearch() {
@@ -45,6 +46,7 @@ std::vector<int> TabooSearch::insertBeforeNumber(std::vector<int> tour, int numb
 
     int number = tour[numberIndex];
     tour.insert(tour.begin() + targetIndex, number);
+    tour.erase(tour.begin() + numberIndex + 1);
     return tour;
 }
 
@@ -121,7 +123,7 @@ std::vector<int> TabooSearch::run(int tabooSize, const std::vector<int> &initial
             if((std::clock() - start_time) / CLOCKS_PER_SEC >= stopTime) break;                                  //sprawdzenie czy algorytm nie powinien zostac zakonczony
             int candidateCost = graph->calculateTour(candidate);
 
-            if((candidateCost < bestCandidateCost) && !candidateInTabooList(tabooList, candidate) && candidateCost >= 0){           //jesli kandydat ma mnijeszy koszt i nie znajduje sie w liscie tabu, to przyjmij go jako najlepszego kandydata
+            if((candidateCost < bestCandidateCost) && !candidateInTabooList(tabooList, candidate)){           //jesli kandydat ma mnijeszy koszt i nie znajduje sie w liscie tabu, to przyjmij go jako najlepszego kandydata
                 bestCandidate = candidate;                                                                          //fixme po naprawieniu insert usunac ostatni warunek
                 bestCandidateCost = candidateCost;
             }
@@ -190,6 +192,61 @@ std::vector<int> TabooSearch::shuffleHalf(std::vector<int> path) {
     }
 
     return path;
+}
+
+std::vector<int> TabooSearch::runTests(int tabooSize, const std::vector<int> &initialSolution, const char* filePath) {
+    std::ofstream file(filePath);
+    if (!file.is_open()) return {};
+    file << "time[s];value" << std::endl;
+
+    std::vector<int> bestSolution = initialSolution;
+    std::vector<int> bestCandidate = initialSolution;
+    std::list<std::vector<int>> tabooList;
+    tabooList.push_back(initialSolution);
+
+    int maxNoImprovement = 7 * graph->getVerticesNumber();                                                       //maksymalna liczba iteracji bez poprawy wyniku
+    int noImprovementCount = 0;
+
+    const std::clock_t start_time = std::clock();                                                                //rozpocznij odliczanie zegara
+
+    while ((std::clock() - start_time) / CLOCKS_PER_SEC < stopTime) {
+        std::list<std::vector<int>> neighborhoodSolutions = getNeighborhoodSolutions(bestCandidate);        //pobierz liczbe sasiadow
+        bestCandidate = neighborhoodSolutions.front();
+        int bestCandidateCost = graph->calculateTour(bestCandidate);
+
+        for(std::vector<int> candidate: neighborhoodSolutions){                                                  //znajdz najlepszego sasiada
+            if((std::clock() - start_time) / CLOCKS_PER_SEC >= stopTime) break;                                  //sprawdzenie czy algorytm nie powinien zostac zakonczony
+            int candidateCost = graph->calculateTour(candidate);
+
+            if((candidateCost < bestCandidateCost) && !candidateInTabooList(tabooList, candidate)){           //jesli kandydat ma mnijeszy koszt i nie znajduje sie w liscie tabu, to przyjmij go jako najlepszego kandydata
+                bestCandidate = candidate;
+                bestCandidateCost = candidateCost;
+            }
+        }
+
+        if(bestCandidateCost < graph->calculateTour(bestSolution)){                                     //jesli najlepszy kandydat jest lepszy niz najlepsze rozwiazanie, to przyjmij go jako najlepsze rozwiazanie
+            bestSolution = bestCandidate;
+            bestSolutionFoundTime = (std::clock() - (double)start_time) / CLOCKS_PER_SEC;
+            file << bestSolutionFoundTime << ";" << bestCandidateCost << std::endl;
+            std::cout << "Rozw: " << bestCandidateCost << " Czas:" << bestSolutionFoundTime << std::endl;
+        }else{                                                                                                //w przeciwnym wypadku zinkrementuj licznik iteracji bez poprawy
+            noImprovementCount++;
+        }
+
+        tabooList.push_back(bestCandidate);                                                                 //zaktualizuj liste tabu
+        if(tabooList.size() > tabooSize){                                                                      //jesli lista przekroczyla swoj maks, usun najstarszy element (FIFO)
+            tabooList.erase(tabooList.begin());
+        }
+
+        if (noImprovementCount >= maxNoImprovement) {                                                           //jesli od dawna nie bylo zmiany (minimum lokalne) - wylosuj sciezke
+            bestCandidate = shuffleHalf(bestSolution);
+            noImprovementCount = 0;
+        }
+    }
+
+    file.close();
+    return bestSolution;
+
 }
 
 
